@@ -1,0 +1,50 @@
+body {
+    margin: 0;
+}
+.quiz_form,
+.quiz {
+    margin: 0 auto;
+    width: 600px;
+}
+
+.quiz-indicator {
+    margin-bottom: 20px;
+}
+
+.reg--hidden,
+.quiz--hidden,
+#btn-save,
+#btn-next,
+#btn-restart {
+    visibility: hidden;
+}
+.form--hide,
+.title-name--hidden,
+.questions--hidden,
+.reg--hidden,
+.quiz--hidden,
+.questions--hidden {
+    display: none;
+}
+
+.answer-invalid {
+    color: red;
+}
+
+.answer-valid {
+    color: green;
+}
+
+.quiz-name{
+    font-size: large;
+}
+
+.quiz-menu{
+    flex:auto;
+    width: 40%;
+    margin-left: 5%;
+    margin: auto;
+}
+
+ 
+
