@@ -5,7 +5,7 @@ import { token, getToken, registrationValid, user_login, user_logout, user_regis
 
 
 async function getResponse() {
-    const urlApi = "http://127.0.0.1:8000/api/"
+    const urlApi = "https://testapp-x3vz.onrender.com/api/"
     const response = await fetch(urlApi,{
         headers: {
             'Content-Type':'application/json',

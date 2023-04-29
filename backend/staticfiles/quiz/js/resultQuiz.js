@@ -9,7 +9,7 @@ var formPhone = document.getElementById("phone_form")
 
 
 async function getRequest(userAnser) {
-    const urlApi = "http://127.0.0.1:8000/api/post/"
+    const urlApi = "https://testapp-x3vz.onrender.com/api/post/"
     const response = await fetch(urlApi,{
         method: "POST",
         headers: {
@@ -23,7 +23,7 @@ async function getRequest(userAnser) {
 
 
 async function updateAnswer(userAnser, userAnswerId) {
-    const urlApi = `http://127.0.0.1:8000/api/put/${userAnswerId}/`
+    const urlApi = `https://testapp-x3vz.onrender.com/api/put/${userAnswerId}/`
     const response = await fetch(urlApi,{
         method: "PUT",
         headers: {
@@ -39,7 +39,7 @@ async function updateAnswer(userAnser, userAnswerId) {
 
 
 async function tg_post(post_data) {
-    const urlApi = `http://127.0.0.1:8000/api/tg_post/`
+    const urlApi = `https://testapp-x3vz.onrender.com/api/tg_post/`
     const response = await fetch(urlApi,{
         method: "POST",
         headers: {
