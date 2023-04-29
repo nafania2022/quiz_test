@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-_^s6-ae@rr05*jnmbbqx=i&wf6kguc--n(p)f^9re)i$83&net
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["testapp-x3vz.onrender.com", "www.testapp-x3vz.onrender.com"]
 
 # Application definition
 
@@ -70,14 +70,12 @@ CORS_ALLOW_METHODS = [
     "POST",
     "PUT",
 ]
-
 CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    "https://example.com",
-    "https://sub.example.com",
-    "http://localhost:8080",
-    "http://127.0.0.1:8000",
+    "https://testapp-x3vz.onrender.com/",
+    "https://www.testapp-x3vz.onrender.com/",
+
 ]
+
 
 CORS_ALLOW_HEADERS = [
     "accept",
