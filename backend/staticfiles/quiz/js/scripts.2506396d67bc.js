@@ -3,18 +3,7 @@ import {renderQuestion, quizQuestions, getOwnerUserAnser} from './questionQuiz.j
 import { token, getToken, registrationValid, user_login, user_logout, user_register, user_quiz} from './registration.js';
 
 
-
-async function getResponse() {
-    const urlApi = "http://127.0.0.1:8000/api/"
-    const response = await fetch(urlApi,{
-        headers: {
-            'Content-Type':'application/json',
-            }
-    });
-    return  response.json();
-  }
-
-
+const url = 'https://testapp-x3vz.onrender.com/'
 let choiceQuiz;
 let count = 0;
 let nameCount = [];
@@ -23,8 +12,6 @@ let isMyQuiz = false;
 let ownerQuiz = new Set();
 let logUserQuiz = [];
 let userAnswerId = [];
-
-
 const quiz = document.getElementById('quiz')
 const quizName = document.getElementById('quiz-name')
 const quizIndicator = document.getElementById('quiz-indicator')
@@ -49,11 +36,22 @@ const myQuiz = document.getElementById('my-quiz')
 const title = document.getElementById('title-name')
 
 
+async function getResponse() {
+    const urlApi = url+"api/"
+    const response = await fetch(urlApi,{
+        headers: {
+            'Content-Type':'application/json',
+        }
+    });
+    return  response.json();
+}
+
+
 const getOwnerQuiz = (data) =>{
     for(let i of data){
         ownerQuiz.add(i.name)
         console.log(i.name)
-        
+
     }
 }
 
@@ -452,4 +450,4 @@ function checkStatus (response) {
     }
 }  
 
-export {btnNext,quiz, title, form, quizIndicator, quizName, quizResult, getResponse, getListQuiz,isMyQuiz, localResults, userAnswerId}
+export {url, btnNext,quiz, title, form, quizIndicator, quizName, quizResult, getResponse, getListQuiz,isMyQuiz, localResults, userAnswerId}

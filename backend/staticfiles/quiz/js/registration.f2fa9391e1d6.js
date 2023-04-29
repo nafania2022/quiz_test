@@ -1,4 +1,4 @@
-import {getResponse, form, title, quizName, getListQuiz, quiz} from './scripts.js'
+import {getResponse, form, title, quizName, getListQuiz, quiz, url} from './scripts.js'
 
 let token = {"auth_token": "undefined", "id": "undefined"};
 let registrationValid = {"status": "", "data": ""};
@@ -23,7 +23,7 @@ function getToken(data) {
 
 
 async function user_login(method, body = NaN) {
-    const urlApi = "http://127.0.0.1:8000/auth/token/login/"
+    const urlApi = url+"auth/token/login/"
     const response = await fetch(urlApi, {
         method: method,
         headers: {
@@ -36,7 +36,7 @@ async function user_login(method, body = NaN) {
 
 
 async function user_quiz() {
-    const urlApi = "http://127.0.0.1:8000/api/quiz_user_owner/"
+    const urlApi = url+"api/quiz_user_owner/"
     const response = await fetch(urlApi, {
 
         headers: {
@@ -53,7 +53,7 @@ async function user_quiz() {
 
 
 async function user_logout(method, body = NaN) {
-    const urlApi = "http://127.0.0.1:8000/auth/token/logout/"
+    const urlApi = url+"auth/token/logout/"
     const response = await fetch(urlApi, {
         method: method,
         headers: {
@@ -68,7 +68,7 @@ async function user_logout(method, body = NaN) {
 }
 
 async function user_register(user_form) {
-    const urlApi = "http://127.0.0.1:8000/api/auth/users/"
+    const urlApi = url+"api/auth/users/"
     const response = await fetch(urlApi, {
         method: "POST",
         headers: {
