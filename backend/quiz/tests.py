@@ -106,3 +106,4 @@ class QuizModelTests(APITestCase):
             serializers = QuizUserAnswerSerializers(quiz)
             self.assertEqual(QuizUserAnswerModel.objects.count(), 2)
             self.assertEqual(serializers.data, response.data)
+
