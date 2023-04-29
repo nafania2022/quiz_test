@@ -197,8 +197,9 @@ CSRF_COOKIE_HTTPONLY = False
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    "/var/www/static/",
+    "/var/testapp-x3vz.onrender.com/static/",
 ]
+
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
