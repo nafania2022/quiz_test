@@ -47,13 +47,11 @@ class GetQuizUserOwner(ListAPIView):
 
 @phone("BY")
 def send_tg_data(request):
-    data = json.loads(request.body)
-    print(data)
-    send_sms(data)
-    bot.send_message(admin_chat_id, f'{data["name_quiz"]}\n\n'
-                                    f'<b>Правильных ответов:</b> {data["count_correct_answer"]["count"]} из {data["count_correct_answer"]["data_len"]} \n'
-                                    f'<b>Имя пользователя:</b> {RegExpValidator.validate_name(data["name"])} \n'
-                                    f'<b>E-mail:</b> {RegExpValidator.validate_email(data["email"])} \n'
-                                    f'<b>Номер телефона:</b> {RegExpValidator.validate_phone(data["phone"])}',
+    send_sms(request)
+    bot.send_message(admin_chat_id, f'{request["name_quiz"]}\n\n'
+                                    f'<b>Правильных ответов:</b> {request["count_correct_answer"]["count"]} из {request["count_correct_answer"]["data_len"]} \n'
+                                    f'<b>Имя пользователя:</b> {RegExpValidator.validate_name(request["name"])} \n'
+                                    f'<b>E-mail:</b> {RegExpValidator.validate_email(request["email"])} \n'
+                                    f'<b>Номер телефона:</b> {request["phone"]}',
                      parse_mode='HTML')
-    return JsonResponse(data)
+    return JsonResponse(request)

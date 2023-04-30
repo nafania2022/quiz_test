@@ -4,24 +4,22 @@ import {token, getToken, registrationValid, user_login, user_logout, user_regist
 
 
 const url = 'https://testapp-x3vz.onrender.com/'
+// const url = 'http://127.0.0.1:8000/'
 let choiceQuiz;
 let count = 0;
 let nameCount = [];
 let localResults = {}
 let isMyQuiz = false;
-let ownerQuiz = new Set();
-let logUserQuiz = [];
 let userAnswerId = [];
+const menu = document.getElementById("menu")
 const quiz = document.getElementById('quiz')
 const quizName = document.getElementById('quiz-name')
 const quizIndicator = document.getElementById('quiz-indicator')
 const quizResult = document.getElementById('quiz-results')
 const btnNext = document.getElementById('btn-next')
 const btnRestart = document.getElementById('btn-restart')
-const btnSave = document.getElementById('btn-save')
 const btnRegistration = document.getElementById('btn-registration')
 const btnLogin = document.getElementById('btn-login')
-// const btnSendRequest = document.getElementById('btn-send-request')
 const quizForm = document.getElementById("quiz_form")
 const form = document.getElementById('reg_log')
 const name_user = document.getElementById('id_username')
@@ -48,13 +46,6 @@ async function getResponse() {
 }
 
 
-const getOwnerQuiz = (data) => {
-    for (let i of data) {
-        ownerQuiz.add(i.name)
-        console.log(i.name)
-
-    }
-}
 
 
 const getOwnerId = (data) => {
@@ -66,42 +57,14 @@ const getOwnerId = (data) => {
 
 
 const getListQuiz = (data) => {
-
     let nameQuiz = new Set();
-
-
     if (token.auth_token !== undefined && token.auth_token !== "undefined") {
-        quizRegistration.classList.add('quiz--hidden')
-        quizLogin.classList.add('quiz--hidden')
-        quizLogout.classList.remove('quiz--hidden')
-        myQuiz.classList.remove('quiz--hidden')
-        user_quiz()
-            .then(data => {
-                getOwnerQuiz(data)
-                getOwnerId(data)
-            })
-
-
-        for (const q of nameQuiz) {
-            for (const o of ownerQuiz) {
-                if (q !== o) {
-                    logUserQuiz.add(q)
-                }
-            }
-        }
 
     }
-
 
     for (let index = 0; index < data.length; ++index) {
         nameQuiz.add(data[index].name)
     }
-    // if (isMyQuiz){
-    //     for (index=0; index < data.length; ++index ){
-    //         ownerAnswerId.push(data[index].id)
-    //     }
-    // }
-
 
     let outputQuiz = ``;
     for (const key of nameQuiz) {
@@ -112,22 +75,21 @@ const getListQuiz = (data) => {
             }
         }
         nameCount[key] = count
-        outputQuiz += `<input style="background: #eee; margin-bottom: 20px" class="btn quiz-name-item" type="button" name="${key}" value="${key}">`
-
+        outputQuiz += `<input class="w-100 btn btn-lg btn-outline-primary quiz-name-item" type="button" name="${key}" value="${key}">`
     }
     quizName.innerHTML = `
-        <div>
-        <div class="quiz-name-item" style ="
-        flex:auto;
-        margin: auto;
-        width: 23.5%;
-        padding: 10px;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;">
-        ${outputQuiz}</div>
+    <div class="row row-cols-1 row-cols-md-1 mb-1 text-center">
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">Выберите тест</h4>
+          </div>
+          <div class="card-body">
+            ${outputQuiz}
+          </div>
         </div>
-        
+      </div>
+    </div>
         `
 }
 
@@ -153,12 +115,16 @@ quiz.addEventListener('change', (event) => {
 quiz.addEventListener('click', (event) => {
     if (event.target.classList.contains('quiz-name-item')) {
         if (token.auth_token !== undefined && token.auth_token !== "undefined") {
-
+            title.classList.remove('quiz--hidden')
+            quizIndicator.classList.remove('quiz--hidden')
+            quizQuestions.classList.remove('quiz--hidden')
+            btnNext.style.visibility = 'visible'
+            quizName.classList.add('quiz--hidden')
             choiceQuiz = event.target.value
             if (isMyQuiz) {
-                btnSave.style.visibility = 'visible'
                 user_quiz()
                     .then(data => {
+                        getOwnerId(data)
                         getQuizName(choiceQuiz, data)
                             .then(data => renderQuestion(0, data))
                     })
@@ -170,7 +136,6 @@ quiz.addEventListener('click', (event) => {
                             .then(data => renderQuestion(0, data))
                     })
             }
-            title.classList.remove('title-name--hidden')
             title.innerHTML = `
         <div style ="
         float: left;
@@ -185,11 +150,12 @@ quiz.addEventListener('click', (event) => {
         `
 
 
-            console.log(nameCount)
+
+            title.classList.remove('quiz--hidden')
+            quizIndicator.classList.remove('quiz--hidden')
+            quizQuestions.classList.remove('quiz--hidden')
             btnNext.style.visibility = 'visible'
-            quizName.classList.add('questions--hidden')
-            console.log(nameCount[choiceQuiz])
-            console.log(typeof (choiceQuiz))
+            quizName.classList.add('quiz--hidden')
         } else {
             title.innerHTML = `
             <div style ="
@@ -203,19 +169,19 @@ quiz.addEventListener('click', (event) => {
             <h4>Авторизуйтесь для прохождения квиза</h4>
             </div>
             `
-            quizName.classList.add('questions--hidden')
-            quizRegistration.classList.remove('quiz--hidden')
-            quizLogin.classList.remove('quiz--hidden')
+            quizName.classList.add('quiz--hidden')
+            quizRegistration.style.visibility = 'visible'
+            quizLogin.style.visibility = 'visible'
         }
     }
 
     if (event.target.classList.contains('btn-next')) {
         const nextQuestionIndex = Number(quizQuestions.dataset.currentStep) + 1
         if (nextQuestionIndex === Number(nameCount[choiceQuiz])) {
-            quizQuestions.classList.add('questions--hidden')
+            quizQuestions.classList.add('quiz--hidden')
             quizIndicator.classList.add('quiz--hidden')
             btnNext.style.visibility = 'hidden'
-            quizForm.classList.remove('form--hide')
+            quizForm.classList.remove('quiz--hidden')
 
 
         } else {
@@ -229,10 +195,10 @@ quiz.addEventListener('click', (event) => {
     } else if (event.target.classList.contains('btn-restart')) {
         localResults = {}
         quizResult.innerHTML = ''
-        quizQuestions.classList.remove('questions--hidden')
+        quizQuestions.classList.remove('quiz--hidden')
         quizIndicator.classList.remove('quiz--hidden')
         btnNext.style.visibility = 'visible'
-        quizResult.style.visibility = 'hidden'
+        quizResult.classList.add('quiz--hidden')
         btnRestart.style.visibility = 'hidden'
 
         getResponse()
@@ -247,10 +213,6 @@ quiz.addEventListener('click', (event) => {
 })
 
 
-getResponse()
-    .then(data => {
-        getListQuiz(data)
-    })
 
 
 form.addEventListener('submit', (events) => {
@@ -263,9 +225,10 @@ form.addEventListener('submit', (events) => {
         })
         user_login("POST", JSON.stringify(registration[0]))
             .then(data => {
-                    checkStatus(data)
                     getToken(data)
-                    console.log(data)
+                if (data["non_field_errors"] !== undefined){
+                    alert(data["non_field_errors"])
+                }
                 }
             )
         events.target.reset()
@@ -292,57 +255,105 @@ form.addEventListener('submit', (events) => {
 })
 
 
-quiz.addEventListener('click', (event) => {
+menu.addEventListener('click', (event) => {
     if (event.target.classList.contains('login')) {
         quiz.classList.add('quiz--hidden')
-        form.classList.remove('reg--hidden')
+        form.classList.remove('quiz--hidden')
         email.removeAttribute('required')
-        emailDiv.classList.add('reg--hidden')
-        firstNameDiv.classList.add('reg--hidden')
-        btnLogin.classList.remove('reg--hidden')
-        btnRegistration.classList.add('reg--hidden')
+        firstName.removeAttribute('required')
+        emailDiv.classList.add('quiz--hidden')
+        firstNameDiv.classList.add('quiz--hidden')
+        btnLogin.style.visibility = 'visible'
+        btnRegistration.style.visibility = 'hidden'
 
     }
 })
 
 
-quiz.addEventListener('click', (event) => {
+menu.addEventListener('click', (event) => {
     if (event.target.classList.contains('logout')) {
         user_logout("POST")
-        quizRegistration.classList.remove('quiz--hidden')
-        quizLogin.classList.remove('quiz--hidden')
-        quizLogout.classList.add('quiz--hidden')
-        myQuiz.classList.add('quiz--hidden')
-        console.log(token.auth_token)
+        quizRegistration.style.visibility = 'visible'
+        quizLogin.style.visibility = 'visible'
+        quizLogout.style.visibility = 'hidden'
+        myQuiz.style.visibility = 'hidden'
+
 
     }
 })
 
 
-quiz.addEventListener('click', (event) => {
+menu.addEventListener('click', (event) => {
     if (event.target.classList.contains('registration')) {
         quiz.classList.add('quiz--hidden')
-        form.classList.remove('reg--hidden')
+        form.classList.remove('quiz--hidden')
         email.setAttribute('required', true)
-        emailDiv.classList.remove('reg--hidden')
-        firstNameDiv.classList.remove('reg--hidden')
-        btnLogin.classList.add('reg--hidden')
-        btnRegistration.classList.remove('reg--hidden')
+        firstName.setAttribute('required', true)
+        emailDiv.classList.remove('quiz--hidden')
+        firstNameDiv.classList.remove('quiz--hidden')
+        btnLogin.style.visibility = 'hidden'
+        btnRegistration.style.visibility = 'visible'
+
+    }
+})
+
+menu.addEventListener('click', (event) => {
+    if (event.target.classList.contains('home')) {
+        quiz.classList.remove('quiz--hidden')
+        form.classList.add('quiz--hidden')
+        title.classList.add('quiz--hidden')
+        quizQuestions.classList.add('quiz--hidden')
+        quizName.classList.remove("quiz--hidden")
+        btnNext.style.visibility = 'hidden'
+        quizIndicator.classList.add('quiz--hidden')
+        quizResult.classList.add('quiz--hidden')
+        isMyQuiz = false
+        getResponse()
+            .then(data => {
+            getListQuiz(data)
+             })
+        if (token.auth_token !== undefined && token.auth_token !== "undefined"){
+            quizRegistration.style.visibility = 'hidden'
+            quizLogin.style.visibility = 'hidden'
+            quizLogout.style.visibility = 'visible'
+            myQuiz.style.visibility = 'visible'
+
+        }else{
+            quizRegistration.style.visibility = 'visible'
+            quizLogin.style.visibility = 'visible'
+            quizLogout.style.visibility = 'hidden'
+            myQuiz.style.visibility = 'hidden'
+        }
+
 
     }
 })
 
 
-quiz.addEventListener('click', (event) => {
+menu.addEventListener('click', (event) => {
     if (event.target.classList.contains('my-quiz')) {
         quiz.classList.remove('quiz--hidden')
-        form.classList.add('reg--hidden')
-        quizQuestions.classList.remove('questions--hidden')
+        form.classList.add('quiz--hidden')
+        title.classList.add('quiz--hidden')
+        quizQuestions.classList.add('quiz--hidden')
+        quizName.classList.remove("quiz--hidden")
+        btnNext.style.visibility = 'hidden'
+        quizIndicator.classList.add('quiz--hidden')
+        quizResult.classList.add('quiz--hidden')
+
 
         user_quiz()
             .then(data => {
-                getListQuiz(data)
-                getOwnerUserAnser(data)
+                if(data.length !== 0) {
+                    getListQuiz(data)
+                    getOwnerUserAnser(data)
+                }else {
+                    quizName.innerHTML = `
+                        <div>
+                        <h4>У вас еще нет пройденных квизов</h4>
+                        </div>
+                        `
+                }
             })
 
         isMyQuiz = true
@@ -350,24 +361,13 @@ quiz.addEventListener('click', (event) => {
 })
 
 
-quiz.addEventListener('click', (event) => {
-    if (event.target.classList.contains('btn-save')) {
-        quizQuestions.classList.add('questions--hidden')
-        quizIndicator.classList.add('quiz--hidden')
-        quizForm.classList.remove('form--hide')
-        quiz.classList.add('quiz--hidden')
-    }
-})
-
 
 quizForm.addEventListener('submit', (events) => {
     console.log(events.submitter.id)
     if (events.submitter.id === 'btn_send_request') {
         events.preventDefault()
-        quizForm.classList.add('form--hide')
+        quizForm.classList.add('quiz--hidden')
         quizResult.style.visibility = 'visible'
-        // btnSave.style.visibility='hidden'
-        // btnNext.style.visibility='hidden'
         getResponse()
             .then(data => {
                 getQuizName(choiceQuiz, data)
@@ -380,40 +380,25 @@ quizForm.addEventListener('submit', (events) => {
 
 function checkStatus(response) {
     if (response.status === 400) {
+        console.log(response)
         let textValide = ``
         for (const [key, value] of Object.entries(registrationValid.data)) {
             console.log(key, value)
             if (key !== 'status') {
                 textValide += `
                 <li style = "color: red;">${value}</li>
-                
+
                 `
             }
         }
     } else if (response.status >= 200 && response.status <= 300) {
         alert(`Регистрация пользавателя прошла успешно!`)
-        title.classList.add('title-name--hidden')
+        title.classList.add('quiz--hidden')
         quiz.classList.remove('quiz--hidden')
-        form.classList.add('reg--hidden')
+        form.classList.add('quiz--hidden')
 
 
     }
-}
-export {
-    url,
-    btnNext,
-    quiz,
-    title,
-    form,
-    quizIndicator,
-    quizName,
-    quizResult,
-    getResponse,
-    getListQuiz,
-    isMyQuiz,
-    localResults,
-    userAnswerId
-}
 
 return form.innerHTML = `
 <div class="row-fluid " id ="reg_log">
@@ -473,3 +458,28 @@ return form.innerHTML = `
 </div>
 
       `
+}
+getResponse()
+    .then(data => {
+        getListQuiz(data)
+    })
+
+export {
+    url,
+    btnNext,
+    quiz,
+    title,
+    form,
+    quizIndicator,
+    quizName,
+    quizResult,
+    getResponse,
+    getListQuiz,
+    isMyQuiz,
+    localResults,
+    userAnswerId,
+    quizLogout,
+    quizRegistration,
+    quizLogin,
+    myQuiz
+}

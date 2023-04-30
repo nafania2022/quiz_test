@@ -1,3 +1,4 @@
+import json
 import re
 
 validated_data = {'email': 'user@email.ru', 'phone': '+375 (33) 666-44-22', 'username': 'asdasdasd',
@@ -37,18 +38,19 @@ def name(len_from, len_to, capitalize=True):
 def phone(contries):
     def actual_validated(func):
         def wrapper(validated_data):
-            ready_phone = re.sub(r"[^\d]", "", validated_data['phone'])
+            data = json.loads(validated_data.body)
+            ready_phone = re.sub(r"[^\d]", "", data['phone'])
             if contries.upper() == "BY":
                 res = re.findall('37533\d{7}', ready_phone) + re.findall('37544\d{7}', ready_phone) + re.findall(
                     '37525\d{7}', ready_phone) + re.findall('37529\d{7}', ready_phone)
-                validated_data['phone'] = res[0]
-                func(validated_data)
+                data['phone'] = res[0]
+                return func(data)
             elif contries.upper() == "RU":
                 res = ''
                 for i in range(900, 998):
                     res += re.findall(f'7{i}\d{7}', ready_phone)
-                validated_data['phone'] = res[0]
-                func(validated_data)
+                data['phone'] = res[0]
+                return func(data)
             else:
                 return f"Выведите русский или белоруский номер"
 

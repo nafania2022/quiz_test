@@ -17,7 +17,7 @@ async function getRequest(userAnser) {
         },
         body: JSON.stringify(userAnser)
     });
-    const result = await response.json();
+    await response.json();
 }
 
 
@@ -32,8 +32,8 @@ async function updateAnswer(userAnser, userAnswerId) {
         body: JSON.stringify(userAnser)
     });
 
-    const result = await response.json();
-//    console.log(result)
+    await response.json();
+
 }
 
 
@@ -47,9 +47,7 @@ async function tg_post(post_data) {
         },
         body: JSON.stringify(post_data)
     });
-
-    const result = await response.json();
-    console.log(result)
+    await response.json();
 }
 
 
@@ -68,13 +66,11 @@ const renderResults = (data) => {
         return className
     };
 
-    for (var index = 0; index < data.length; ++index) {
+    for (let index = 0; index < data.length; ++index) {
         const userAnswer = [];
         let getAnswers = ``;
-        for (var i = 0; i < data[index].answer.length; ++i) {
-            console.log(Number(data[index].user_answer))
-            console.log(Number(data[index].answer[i].isCorrect))
-            if ((localResults[index] == data[index].answer[i].value) && data[index].answer[i].isCorrect) {
+        for (let i = 0; i < data[index].answer.length; ++i) {
+            if ((Number(localResults[index]) === Number(data[index].answer[i].id)) && data[index].answer[i].isCorrect) {
                 ++count_correct_answer
                 console.log(count_correct_answer)
             }
@@ -96,19 +92,19 @@ const renderResults = (data) => {
         userAnswerQuizs.push(userQuiz)
         result += `
         <div class="quiz-result-item" style ="
-        float: left;
-        width: 100%;
-        margin-right: 2%;
-        padding: 10px;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;">
+                margin: auto;
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                flex-direction: column;
+                flex-wrap: nowrap;">
+            <h5>Вы ответили правильно ${count_correct_answer} из ${data.length} </h5>
             <div class="quiz-result-item-qestion">${data[index].question}</div>
             <ul class="quiz-result-item-answer">${getAnswers}</ul>
         </div>
         `
     }
-
+    quizResult.classList.remove("quiz-result")
     quizResult.innerHTML = result
 
     form_data(count_correct_answer, data)
@@ -125,7 +121,6 @@ const renderResults = (data) => {
 
 function getCookie(name) {
     let cookieValue = null;
-    console.log(document.cookie)
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
@@ -141,7 +136,6 @@ function getCookie(name) {
 }
 
 const form_data = (count, data) => {
-    console.log(formPhone, formUser, emailForm)
     const tg_data = {
         "name_quiz": data[0].name,
         "count_correct_answer": {"count": count, "data_len": data.length},

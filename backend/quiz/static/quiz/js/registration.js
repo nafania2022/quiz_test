@@ -1,4 +1,4 @@
-import {getResponse, form, title, quizName, getListQuiz, quiz, url} from './scripts.js'
+import {getResponse, form, title, quizName, getListQuiz, quiz, url, quizLogout, quizRegistration, quizLogin, myQuiz} from './scripts.js'
 
 let token = {"auth_token": "undefined", "id": "undefined"};
 let registrationValid = {"status": "", "data": ""};
@@ -7,16 +7,20 @@ let registrationValid = {"status": "", "data": ""};
 function getToken(data) {
     token["auth_token"] = data.auth_token
 
-    console.log(token.auth_token)
+    console.log(data)
     if (token.auth_token !== undefined && token.auth_token !== "undefined") {
         getResponse()
             .then(data => {
                 getListQuiz(data)
             })
-        quizName.classList.remove('questions--hidden')
-        title.classList.add('title-name--hidden')
+        quizName.classList.remove('quiz--hidden')
+        title.classList.add('quiz--hidden')
         quiz.classList.remove('quiz--hidden')
-        form.classList.add('reg--hidden')
+        form.classList.add('quiz--hidden')
+        quizRegistration.style.visibility = "hidden"
+        quizLogin.style.visibility = "hidden"
+        quizLogout.style.visibility = 'visible'
+        myQuiz.style.visibility = "visible"
     }
 
 }
@@ -61,10 +65,8 @@ async function user_logout(method, body = NaN) {
         },
         body: body
     });
-    const result = await response.json();
     token = {"auth_token": "undefined"}
-    console.log(result)
-    return result
+    await response.json();
 }
 
 async function user_register(user_form) {

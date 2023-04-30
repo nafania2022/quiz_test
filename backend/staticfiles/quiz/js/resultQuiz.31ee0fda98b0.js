@@ -70,6 +70,9 @@ const renderResults = (data) => {
         const userAnswer = [];
         let getAnswers = ``;
         for (let i = 0; i < data[index].answer.length; ++i) {
+            console.log(Number(localResults[index]))
+            console.log(Number(data[index].answer[i].id))
+            console.log(data[index].answer[i].id === Number(localResults[index]))
             if ((Number(localResults[index]) === Number(data[index].answer[i].id)) && data[index].answer[i].isCorrect) {
                 ++count_correct_answer
                 console.log(count_correct_answer)
@@ -121,6 +124,7 @@ const renderResults = (data) => {
 
 function getCookie(name) {
     let cookieValue = null;
+    console.log(document.cookie)
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
@@ -143,6 +147,7 @@ const form_data = (count, data) => {
         "email": emailForm.value,
         "phone": formPhone.value
     };
+    console.log(tg_data)
     tg_post(tg_data)
 }
 

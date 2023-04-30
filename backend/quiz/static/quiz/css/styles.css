@@ -1,29 +1,29 @@
-body {
-    margin: 0;
+.quiz-name{
+    width: 400px;
 }
 .quiz_form,
 .quiz {
-    margin: 0 auto;
-    width: 600px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+    flex-wrap: nowrap;
 }
 
 .quiz-indicator {
     margin-bottom: 20px;
 }
 
-.reg--hidden,
-.quiz--hidden,
+#my-quiz,
+#logout,
 #btn-save,
 #btn-next,
 #btn-restart {
     visibility: hidden;
 }
-.form--hide,
-.title-name--hidden,
-.questions--hidden,
-.reg--hidden,
-.quiz--hidden,
-.questions--hidden {
+
+.quiz--hidden {
     display: none;
 }
 
@@ -35,16 +35,6 @@ body {
     color: green;
 }
 
-.quiz-name{
-    font-size: large;
-}
-
-.quiz-menu{
-    flex:auto;
-    width: 40%;
-    margin-left: 5%;
-    margin: auto;
-}
 
  
 

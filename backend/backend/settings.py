@@ -31,6 +31,7 @@ SECRET_KEY = 'django-insecure-_^s6-ae@rr05*jnmbbqx=i&wf6kguc--n(p)f^9re)i$83&net
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+# ALLOWED_HOSTS = ["*"]
 ALLOWED_HOSTS = ["testapp-x3vz.onrender.com", "www.testapp-x3vz.onrender.com"]
 
 # Application definition
@@ -73,8 +74,11 @@ CORS_ALLOW_METHODS = [
 CORS_ALLOWED_ORIGINS = [
     "https://testapp-x3vz.onrender.com/",
     "https://www.testapp-x3vz.onrender.com/",
-
 ]
+
+# CORS_ALLOWED_ORIGINS = [
+#     "https://127.0.0.1",
+# ]
 
 
 CORS_ALLOW_HEADERS = [
@@ -190,7 +194,7 @@ USE_TZ = True
 CORS_ALLOW_ALL_ORIGINS = True
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_HTTPONLY = False
-
+SECURE_SSL_REDIRECT = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 

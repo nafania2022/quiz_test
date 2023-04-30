@@ -21,6 +21,7 @@ const renderQuestion = (index, data) => {
     renderIndicator(index + 1, data)
     quizQuestions.dataset.currentStep = index
     btnNext.disabled = true
+    console.log(data)
     let renderAnswers = ``
     for (let i=0; i < data[index].answer.length; ++i){
         if(data[index].answer[i].id === ownerUserAnswer[index]){
