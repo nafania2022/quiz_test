@@ -88,21 +88,21 @@
                         <div class="form-group">
                             <label for="id_username">Username:</label>
                             <input type="text" name="username" maxlength="100" autocapitalize="off" autocorrect="off"
-                                   class="form-control textinput textInput username" id="id_username" required=""
+                                   class="form-control textinput textInput username" placeholder="Введите логин" id="id_username" required=""
                                    autofocus="">
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div id="div_id_name" class="form-group reg--hidden">
                         <label for="quiz-user">First Name:</label>
-                        <input class="form-control" id="first_name" name="first_name" placeholder="Напишите своё имя"
+                        <input class="form-control " id="first_name" name="first_name" placeholder="Напишите своё имя"
                                required="required">
                     </div>
 
                     <div id="div_id_email" class="clearfix control-group reg--hidden">
                         <div class="form-group">
                             <label for="id_email">EMAIL:</label>
-                            <input type="text" name="email" maxlength="100" autocapitalize="off" autocorrect="off"
+                            <input type="text" name="email" maxlength="100" autocapitalize="off" autocorrect="off" placeholder="Введите email"
                                    class="form-control textinput textInput email" id="email">
                         </div>
                     </div>
@@ -110,7 +110,7 @@
                     <div id="div_id_password" class="clearfix control-group ">
                         <div class="form-group">
                             <label for="id_password">Password:</label>
-                            <input type="password" name="password" maxlength="100" autocapitalize="off"
+                            <input type="password" name="password" maxlength="100" autocapitalize="off" placeholder="Введите пароль"
                                    autocorrect="off" class="form-control textinput textInput posword-user"
                                    id="id_password" required="">
                             <div class="form-actions-no-box">
