@@ -71,6 +71,7 @@ CORS_ALLOW_METHODS = [
     "POST",
     "PUT",
 ]
+
 CORS_ALLOWED_ORIGINS = [
     "https://testapp-x3vz.onrender.com/",
     "https://www.testapp-x3vz.onrender.com/",

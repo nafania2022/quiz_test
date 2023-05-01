@@ -1,6 +1,6 @@
 import {renderResults} from './resultQuiz.js';
 import {renderQuestion, quizQuestions, getOwnerUserAnser} from './questionQuiz.js';
-import {token, getToken, registrationValid, user_login, user_logout, user_register, user_quiz} from './registration.js';
+import {token, getToken, checkStatus, user_register} from './registration.js';
 
 
 const url = 'https://testapp-x3vz.onrender.com/'
@@ -11,6 +11,7 @@ let nameCount = [];
 let localResults = {}
 let isMyQuiz = false;
 let userAnswerId = [];
+let ownerQuizName = new Set();
 const menu = document.getElementById("menu")
 const quiz = document.getElementById('quiz')
 const quizName = document.getElementById('quiz-name')
@@ -35,18 +36,34 @@ const myQuiz = document.getElementById('my-quiz')
 const title = document.getElementById('title-name')
 
 
-async function getResponse() {
-    const urlApi = url + "api/"
-    const response = await fetch(urlApi, {
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    });
-    return response.json();
+async function getResponse(basicUrl, url, method, body=NaN) {
+    const urlApi = basicUrl + url
+    if (method !== 'GET') {
+        const response = await fetch(urlApi, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: body
+        })
+        return await response.json();
+    }else {
+        const response = await fetch(urlApi, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        return await response.json();
+    }
 }
 
+const getOwnerQuizName = (data) => {
+    for (let i = 0; i < data.length; ++i) {
+        ownerQuizName.add(data[i].name);
+    }
 
 
+}
 
 const getOwnerId = (data) => {
     for (let i = 0; i < data.length; ++i) {
@@ -67,7 +84,7 @@ const getListQuiz = (data) => {
     }
 
     let outputQuiz = ``;
-    for (const key of nameQuiz) {
+    for (let key of nameQuiz) {
         count = 0
         for (let i = 0; i < data.length; ++i) {
             if (data[i].name === key) {
@@ -122,7 +139,7 @@ quiz.addEventListener('click', (event) => {
             quizName.classList.add('quiz--hidden')
             choiceQuiz = event.target.value
             if (isMyQuiz) {
-                user_quiz()
+                getResponse(url,"api/quiz_user_owner/","GET")
                     .then(data => {
                         getOwnerId(data)
                         getQuizName(choiceQuiz, data)
@@ -130,7 +147,12 @@ quiz.addEventListener('click', (event) => {
                     })
 
             } else {
-                getResponse()
+                getResponse(url,"api/quiz_user_owner/","GET")
+                    .then(data => {
+                        getOwnerQuizName(data)
+                        getOwnerId(data)
+                    })
+                getResponse(url,"api/","GET")
                     .then(data => {
                         getQuizName(choiceQuiz, data)
                             .then(data => renderQuestion(0, data))
@@ -185,7 +207,7 @@ quiz.addEventListener('click', (event) => {
 
 
         } else {
-            getResponse()
+            getResponse(url,"api/","GET")
                 .then(data => {
                     getQuizName(choiceQuiz, data)
                         .then(data => renderQuestion(nextQuestionIndex, data))
@@ -201,7 +223,7 @@ quiz.addEventListener('click', (event) => {
         quizResult.classList.add('quiz--hidden')
         btnRestart.style.visibility = 'hidden'
 
-        getResponse()
+        getResponse(url,"api/","GET")
             .then(data => {
                 getQuizName(choiceQuiz, data)
                     .then(data => renderQuestion(0, data))
@@ -223,7 +245,8 @@ form.addEventListener('submit', (events) => {
             "username": name_user.value,
             "password": password.value
         })
-        user_login("POST", JSON.stringify(registration[0]))
+
+        getResponse(url,"auth/token/login/","POST", JSON.stringify(registration[0]))
             .then(data => {
                     getToken(data)
                 if (data["non_field_errors"] !== undefined){
@@ -272,7 +295,10 @@ menu.addEventListener('click', (event) => {
 
 menu.addEventListener('click', (event) => {
     if (event.target.classList.contains('logout')) {
-        user_logout("POST")
+        getResponse(url,"auth/token/logout/","GET")
+        token["auth_token"] = "undefined"
+        quizQuestions.classList.remove('quiz--hidden')
+        quizResult.classList.add('quiz--hidden')
         quizRegistration.style.visibility = 'visible'
         quizLogin.style.visibility = 'visible'
         quizLogout.style.visibility = 'hidden'
@@ -308,7 +334,7 @@ menu.addEventListener('click', (event) => {
         quizIndicator.classList.add('quiz--hidden')
         quizResult.classList.add('quiz--hidden')
         isMyQuiz = false
-        getResponse()
+        getResponse(url,"api/","GET")
             .then(data => {
             getListQuiz(data)
              })
@@ -342,7 +368,7 @@ menu.addEventListener('click', (event) => {
         quizResult.classList.add('quiz--hidden')
 
 
-        user_quiz()
+        getResponse(url,"api/quiz_user_owner/","GET")
             .then(data => {
                 if(data.length !== 0) {
                     getListQuiz(data)
@@ -368,7 +394,7 @@ quizForm.addEventListener('submit', (events) => {
         events.preventDefault()
         quizForm.classList.add('quiz--hidden')
         quizResult.style.visibility = 'visible'
-        getResponse()
+        getResponse(url,"api/","GET")
             .then(data => {
                 getQuizName(choiceQuiz, data)
                     .then(data => renderResults(data))
@@ -378,88 +404,7 @@ quizForm.addEventListener('submit', (events) => {
 })
 
 
-function checkStatus(response) {
-    if (response.status === 400) {
-        console.log(response)
-        let textValide = ``
-        for (const [key, value] of Object.entries(registrationValid.data)) {
-            console.log(key, value)
-            if (key !== 'status') {
-                textValide += `
-                <li style = "color: red;">${value}</li>
-
-                `
-            }
-        }
-    } else if (response.status >= 200 && response.status <= 300) {
-        alert(`Регистрация пользавателя прошла успешно!`)
-        title.classList.add('quiz--hidden')
-        quiz.classList.remove('quiz--hidden')
-        form.classList.add('quiz--hidden')
-
-
-    }
-
-return form.innerHTML = `
-<div class="row-fluid " id ="reg_log">
-  <div class="well" style="width: 320px; margin-left: auto; margin-right: auto">
-        <div class="row-fluid">
-            <div>
-                <h3 style="margin: 0 0 20px;">Введите данные</h3>
-            </div>
-        </div>
-
-        <div class="row-fluid">
-            <div>
-                <form action="">
-                    <div id="div_id_username" class="clearfix control-group ">
-                        <div class="form-group">
-                            <label for="id_username">Username:</label>
-                            <input type="text" name="username" maxlength="100" autocapitalize="off" autocorrect="off"
-                                   class="form-control textinput textInput username" placeholder="Введите логин" id="id_username" required=""
-                                   autofocus="">
-                        </div>
-                    </div>
-
-                    <div id="div_id_name" class="form-group reg--hidden">
-                        <label for="quiz-user">First Name:</label>
-                        <input class="form-control " id="first_name" name="first_name" placeholder="Напишите своё имя"
-                               required="required">
-                    </div>
-
-                    <div id="div_id_email" class="clearfix control-group reg--hidden">
-                        <div class="form-group">
-                            <label for="id_email">EMAIL:</label>
-                            <input type="text" name="email" maxlength="100" autocapitalize="off" autocorrect="off" placeholder="Введите email"
-                                   class="form-control textinput textInput email" id="email">
-                        </div>
-                    </div>
-
-                    <div id="div_id_password" class="clearfix control-group ">
-                        <div class="form-group">
-                            <label for="id_password">Password:</label>
-                            <input type="password" name="password" maxlength="100" autocapitalize="off" placeholder="Введите пароль"
-                                   autocorrect="off" class="form-control textinput textInput posword-user"
-                                   id="id_password" required="">
-                                <lu>
-                                    ${textValide}
-                                </lu>
-                            <div class="form-actions-no-box">
-                                <input type="submit" name="submit" value="Войти"
-                                       class="btn btn-primary form-control btn-submit btn-login" id="btn-login">
-                                <input type="submit" name="submit" value="Регистрация"
-                                       class="btn btn-primary form-control btn-submit btn-registration reg--hidden"
-                                       id="btn-registration">
-                            </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-      `
-}
-getResponse()
+getResponse(url,"api/","GET")
     .then(data => {
         getListQuiz(data)
     })
@@ -481,5 +426,6 @@ export {
     quizLogout,
     quizRegistration,
     quizLogin,
-    myQuiz
+    myQuiz,
+    ownerQuizName
 }

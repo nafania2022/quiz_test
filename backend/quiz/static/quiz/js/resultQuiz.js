@@ -1,4 +1,4 @@
-import {url, localResults, isMyQuiz, userAnswerId, quizResult} from "./scripts.js"
+import {url, localResults, isMyQuiz, userAnswerId, quizResult, ownerQuizName} from "./scripts.js"
 import {token} from "./registration.js"
 
 
@@ -7,7 +7,7 @@ const emailForm = document.getElementById("email_form");
 const formPhone = document.getElementById("phone_form");
 
 
-async function getRequest(userAnser) {
+async function addAnswer(userAnser) {
     const urlApi = url + "api/post/"
     const response = await fetch(urlApi, {
         method: "POST",
@@ -72,7 +72,6 @@ const renderResults = (data) => {
         for (let i = 0; i < data[index].answer.length; ++i) {
             if ((Number(localResults[index]) === Number(data[index].answer[i].id)) && data[index].answer[i].isCorrect) {
                 ++count_correct_answer
-                console.log(count_correct_answer)
             }
             getAnswers += `<li class="${checkIsCorrect(data[index].answer[i], index)}">${data[index].answer[i].value}</li>`
             userAnswer.push({
@@ -98,25 +97,24 @@ const renderResults = (data) => {
                 justify-content: space-evenly;
                 flex-direction: column;
                 flex-wrap: nowrap;">
-            <h5>Вы ответили правильно ${count_correct_answer} из ${data.length} </h5>
             <div class="quiz-result-item-qestion">${data[index].question}</div>
             <ul class="quiz-result-item-answer">${getAnswers}</ul>
         </div>
         `
     }
     quizResult.classList.remove("quiz-result")
-    quizResult.innerHTML = result
+    quizResult.innerHTML = `<h5>Вы ответили правильно ${count_correct_answer} из ${data.length} </h5>`+result
 
-    form_data(count_correct_answer, data)
-    if (isMyQuiz) {
-        console.log(userAnswerId)
-        for (var i = 0; i < userAnswerId; ++i) {
+    console.log(ownerQuizName)
+    if (isMyQuiz || ownerQuizName.has(String(data[0].name))) {
+        for (let i = 0; i < userAnswerId; ++i) {
             updateAnswer(userAnswerQuizs[i], userAnswerId[i])
         }
-
     } else {
-        getRequest(userAnswerQuizs)
+
+        addAnswer(userAnswerQuizs)
     }
+    form_data(count_correct_answer, data)
 }
 
 function getCookie(name) {

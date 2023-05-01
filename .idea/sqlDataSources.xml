@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="d548fe74-8f8e-4664-b5b2-c8eda1c059e2" name="quizdb_8dnx@dpg-ch5a6t2k728glslfratg-a Mapping">
+      <data-sources db="f2e24b65-885f-417e-9c31-b0c1b2ae6b3b" />
+    </mapping>
+    <mapping uuid="62f807e3-324c-44a1-957f-f65a45a2d6b0" name="PostgreSQL Mapping">
+      <data-sources db="c9f29c42-9ca8-4254-86eb-8344cd878d92" />
+    </mapping>
+  </component>
+</project>
