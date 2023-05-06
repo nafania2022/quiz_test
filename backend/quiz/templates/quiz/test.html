@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+            integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div class="quiz_form quiz--hidden" id="quiz_form">
+    <form action="">
+        <div class="form-group" style="text-align: center;">
+            <p><br>Введите данные для отправки</p>
+        </div>
+        <div class="form-group">
+            <label for="quiz-user">Ваше имя:</label>
+            <input class="form-control" id="name_form" name="name_form" placeholder="Напишите своё имя"
+                   required="required">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email_form" name="email" placeholder="Введите email"
+                   required="required">
+            <script>
+                $(document).ready(function () {
+                    $("#email_form").inputmask("email")
+                });
+            </script>
+        </div>
+        <div class="form-group">
+            <label for="phone">Телефон</label>
+            <input type="tel" class="form-control" id="phone_form" name="phone" placeholder="Введите номер телефона"
+                   required="required">
+            <script>
+
+                $(document).ready(function () {
+                    $(phone_form).inputmask({
+                        "mask": "+375 (25|29|33|44) 999-99-99"
+                    })
+                })
+            </script>
+        </div>
+        <div class="form-group">
+            <input type="submit" name="submit" class="btn btn-primary form-control btn-submit" id="btn_send_request"
+                   value="Отправить заявку">
+        </div>
+    </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js"></script>
+<script src={% static "quiz/js/jquery.inputmask.js" %} ></script>
+</body>
+</html>

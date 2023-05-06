@@ -19,7 +19,6 @@ class UserSerializer(serializers.ModelSerializer):
     #     email = RegExpValidator.validate_email(validated_data['email'])
     #     first_name = RegExpValidator.validate_name(validated_data['first_name'])
     #     username = validated_data['username']
-    #     print(first_name)
     #     user = User(email=email, username=username, first_name=first_name)
     #     user.set_password(validated_data['password'])
     #     user.save()

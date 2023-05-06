@@ -31,8 +31,10 @@ SECRET_KEY = env("DJANGO_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS = ["testapp-x3vz.onrender.com", "www.testapp-x3vz.onrender.com"]
+if DEBUG:
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = ["testapp-x3vz.onrender.com", "www.testapp-x3vz.onrender.com"]
 
 # Application definition
 
@@ -72,14 +74,16 @@ CORS_ALLOW_METHODS = [
     "PUT",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "https://testapp-x3vz.onrender.com/",
-    "https://www.testapp-x3vz.onrender.com/",
-]
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        "https://127.0.0.1",
+    ]
+else:
+    CORS_ALLOWED_ORIGINS = [
+        "https://testapp-x3vz.onrender.com/",
+        "https://www.testapp-x3vz.onrender.com/",
+    ]
 
-# CORS_ALLOWED_ORIGINS = [
-#     "https://127.0.0.1",
-# ]
 
 
 CORS_ALLOW_HEADERS = [
@@ -118,23 +122,23 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgresql',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#         'TEST': {
-#             'NAME': 'mytestdatabase',
-#                 },
-#     },
-# }
-
 DATABASES = {
-    "default": dj_database_url.parse(env("DATABASE_URL"))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgresql',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'TEST': {
+            'NAME': 'mytestdatabase',
+                },
+    },
 }
+
+# DATABASES = {
+#     "default": dj_database_url.parse(env("DATABASE_URL"))
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
